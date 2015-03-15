@@ -43,7 +43,12 @@ module.exports = function (grunt) {
          */
         processedOptions.scriptTemplate = processedOptions.scriptTemplate.replace('{{', '<%=').replace('}}', '%>');
         processedOptions.linkTemplate = processedOptions.linkTemplate.replace('{{', '<%=').replace('}}', '%>');
-
+        
+        /**
+         * copy absolute path property
+         */
+        processedOptions.absolutePath = options.absolutePath;
+        
         /**
          * get the openTag line from content
          */
@@ -88,8 +93,11 @@ module.exports = function (grunt) {
 
         srcFiles.forEach(function (srcFile) {
             // calculate the src files path relative to destination path
-            var relativePath = normalizePaths(path.relative(filePath, srcFile));
-            tagsText += that.options.indent + that.generateTag(relativePath);
+        	var normalizedPath = normalizePaths(path.relative(filePath, srcFile));
+        	if (that.options.absolutePath) {
+        		normalizedPath = normalizePaths(srcFile);
+        	}
+            tagsText += that.options.indent + that.generateTag(normalizedPath);
         });
 
         var res = this.addTags(fileContents, tagsText);

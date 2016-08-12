@@ -45,9 +45,9 @@ module.exports = function (grunt) {
         processedOptions.linkTemplate = processedOptions.linkTemplate.replace('{{', '<%=').replace('}}', '%>');
         
         /**
-         * copy absolute path property
+         * copy ignorePath property
          */
-        processedOptions.absolutePath = options.absolutePath;
+        processedOptions.ignorePath = options.ignorePath;
         
         /**
          * get the openTag line from content
@@ -94,8 +94,8 @@ module.exports = function (grunt) {
         srcFiles.forEach(function (srcFile) {
             // calculate the src files path relative to destination path
         	var normalizedPath = normalizePaths(path.relative(filePath, srcFile));
-        	if (that.options.absolutePath) {
-        		normalizedPath = normalizePaths(srcFile);
+        	if (that.options.ignorePath) {
+        		normalizedPath = normalizedPath.replace(that.options.ignorePath, '');
         	}
             tagsText += that.options.indent + that.generateTag(normalizedPath);
         });
